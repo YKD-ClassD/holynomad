@@ -706,12 +706,12 @@
         <div id="paymentRows">
           <div class="payment-row">
             <span class="payment-label">입금 계좌</span>
-            <span class="payment-value" id="accountNum">신한은행 110-000-000000</span>
+            <span class="payment-value" id="accountNum">카카오뱅크 7942-30-77692</span>
             <button class="copy-btn" onclick="copyAccount()">복사</button>
           </div>
           <div class="payment-row">
             <span class="payment-label">예금주</span>
-            <span class="payment-value">홍길동 (클래스D)</span>
+            <span class="payment-value">박정윤</span>
           </div>
         </div>
         <div class="payment-note" id="paymentNoteText">4월 12일(주일)까지 미입금 시 신청이 취소될 수 있습니다</div>
@@ -747,7 +747,18 @@
   <script>
     const TOTAL = 50;
     const WAITLIST_MAX = 10;
-    let filled = 12; // 예시값
+    let filled = 0;
+
+    // 실시간 신청자 수 불러오기 (JSONP)
+    function onCount(data) {
+      if (data && typeof data.count === 'number') {
+        filled = data.count;
+        updateCapacity();
+      }
+    }
+    const countScript = document.createElement('script');
+    countScript.src = 'https://script.google.com/macros/s/AKfycbzkKIVhoRUJ4Po13KYLTeXqipcTQucjTHHoUHw_Bu7GDEelqyo-tlWRDC0qt3nzYz0U/exec?callback=onCount';
+    document.head.appendChild(countScript);
 
     function updateCapacity() {
       const isWaitlist = filled >= TOTAL;
@@ -782,7 +793,7 @@
 
     function copyAccount() {
       const btn = document.querySelector('.copy-btn');
-      navigator.clipboard.writeText('신한은행 110-000-000000').then(() => {
+      navigator.clipboard.writeText('카카오뱅크 7942-30-77692').then(() => {
         btn.textContent = '복사됨 ✓';
         btn.classList.add('copied');
         setTimeout(() => { btn.textContent = '복사'; btn.classList.remove('copied'); }, 2000);
@@ -810,7 +821,7 @@
       showError(errorId, hasError);
     }
 
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxXZfO7atkijA5Rd2nwmXynpNgXlaAHkFeFTgB-laD6vRVQfIBhZ7hR12X3hgVAjExL/exec';
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzkKIVhoRUJ4Po13KYLTeXqipcTQucjTHHoUHw_Bu7GDEelqyo-tlWRDC0qt3nzYz0U/exec';
 
     function handleSubmit() {
       if (filled >= TOTAL + WAITLIST_MAX) {
@@ -853,7 +864,7 @@
           successDesc.innerHTML = `광야를 함께 걸어갈 준비가 되셨군요.<br>강연 당일 뵙겠습니다.<br><br>
           <span style="color:var(--gold);font-size:13px;letter-spacing:0.05em;">
             참가비 5,000원을 3일 이내 입금해주세요<br>
-            신한은행 110-000-000000 (홍길동)
+            카카오뱅크 7942-30-77692 (박정윤)
           </span><br><br>
           문의사항은 <a href="https://open.kakao.com/o/ss5d7ami" target="_blank" style="color:var(--gold);">카카오톡 오픈채팅</a>으로 연락해주세요.`;
         }
