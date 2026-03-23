@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>신청 | The Holy Nomad</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;600;700;900&family=DM+Sans:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --sand: #2d2926;
+      --ink: #f0ece4;
+      --dust: #b8a89a;
+      --gold: #E8A0B0;
+      --gold-light: #f0b8c5;
+      --line: #4a4440;
+      --white: #2d2926;
+      --red: #e05050;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #2d2926;
+      color: var(--ink);
+      font-family: 'Noto Sans KR', 'DM Sans', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── BACKGROUND TEXTURE ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        radial-gradient(ellipse 80% 60% at 10% 90%, rgba(184,146,74,0.08) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 80% at 90% 10%, rgba(140,128,112,0.06) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── HEADER ── */
+    header {
+      position: relative;
+      z-index: 1;
+      padding: 64px 24px 48px;
+      text-align: center;
+      border-bottom: 1px solid var(--line);
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .en-title {
+      font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', sans-serif;
+      font-size: clamp(42px, 10vw, 72px);
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      color: var(--ink);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .en-title span {
+      color: var(--gold);
+    }
+
+    .divider-line {
+      width: 40px;
+      height: 1px;
+      background: var(--gold);
+      margin: 20px auto;
+    }
+
+    .ko-title {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: clamp(13px, 3vw, 16px);
+      font-weight: 300;
+      letter-spacing: 0.25em;
+      color: var(--dust);
+      line-height: 1.8;
+    }
+
+    .ko-subtitle {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: clamp(11px, 2.5vw, 13px);
+      font-weight: 300;
+      letter-spacing: 0.2em;
+      color: var(--gold);
+      margin-top: 6px;
+    }
+
+    .header-desc {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: clamp(12px, 2.5vw, 14px);
+      font-weight: 300;
+      color: var(--dust);
+      line-height: 1.9;
+      margin-top: 20px;
+      letter-spacing: 0.02em;
+    }
+
+    /* ── INFO STRIP ── */
+    .info-strip {
+      position: relative;
+      z-index: 1;
+      max-width: 680px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .info-item {
+      padding: 20px 16px;
+      text-align: center;
+      border-right: 1px solid var(--line);
+    }
+    .info-item:last-child { border-right: none; }
+
+    .info-label {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      color: var(--dust);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .info-value {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 13px;
+      font-weight: 400;
+      color: var(--ink);
+      line-height: 1.5;
+    }
+
+    /* ── CAPACITY BAR ── */
+    .capacity-wrap {
+      position: relative;
+      z-index: 1;
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .capacity-label {
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      color: var(--dust);
+      white-space: nowrap;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    .capacity-bar-bg {
+      flex: 1;
+      height: 3px;
+      background: var(--line);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .capacity-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--gold);
+      border-radius: 2px;
+      transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .capacity-count {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 15px;
+      color: var(--ink);
+      white-space: nowrap;
+    }
+
+    .capacity-count span { color: var(--gold); }
+
+    /* ── FORM ── */
+    main {
+      position: relative;
+      z-index: 1;
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+
+    .form-section-title {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.3em;
+      color: var(--dust);
+      text-transform: uppercase;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .form-section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--line);
+    }
+
+    .field-group {
+      margin-bottom: 28px;
+    }
+
+    label {
+      display: block;
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 12px;
+      letter-spacing: 0.15em;
+      color: var(--dust);
+      margin-bottom: 8px;
+    }
+
+    label .required {
+      color: var(--gold);
+      margin-left: 3px;
+    }
+
+    input[type="text"],
+    input[type="tel"],
+    select {
+      width: 100%;
+      padding: 14px 0;
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid var(--line);
+      color: var(--ink);
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 15px;
+      font-weight: 300;
+      outline: none;
+      transition: border-color 0.3s;
+      appearance: none;
+      -webkit-appearance: none;
+      border-radius: 0;
+    }
+
+    input[type="text"]:focus,
+    input[type="tel"]:focus,
+    select:focus {
+      border-bottom-color: var(--gold);
+    }
+
+    input::placeholder { color: var(--line); }
+
+    .select-wrap {
+      position: relative;
+    }
+
+    .select-wrap::after {
+      content: '↓';
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--dust);
+      font-size: 12px;
+      pointer-events: none;
+    }
+
+    select option { background: var(--white); }
+
+    /* 두 컬럼 레이아웃 */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0 32px;
+    }
+
+    /* ── 회차 선택 ── */
+    .session-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 4px;
+    }
+
+    .session-option {
+      flex: 1;
+      position: relative;
+    }
+
+    .session-option input[type="radio"] {
+      position: absolute;
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .session-label {
+      display: block;
+      padding: 14px 12px;
+      border: 1px solid var(--line);
+      cursor: pointer;
+      transition: all 0.25s;
+      text-align: center;
+    }
+
+    .session-label .s-date {
+      display: block;
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 18px;
+      color: var(--ink);
+      margin-bottom: 2px;
+    }
+
+    .session-label .s-desc {
+      display: block;
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      color: var(--dust);
+    }
+
+    .session-option input:checked + .session-label {
+      border-color: var(--gold);
+      background: rgba(184,146,74,0.05);
+    }
+
+    .session-option input:checked + .session-label .s-date {
+      color: var(--gold);
+    }
+
+    /* ── CHECKBOX ── */
+    .checkbox-wrap {
+      margin-top: 32px;
+      padding: 20px 20px;
+      border: 1px solid var(--line);
+      background: rgba(45,41,38,0.8);
+    }
+
+    .checkbox-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      cursor: pointer;
+    }
+
+    .checkbox-item input[type="checkbox"] {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border: 1px solid var(--line);
+      flex-shrink: 0;
+      margin-top: 2px;
+      cursor: pointer;
+      transition: all 0.2s;
+      position: relative;
+    }
+
+    .checkbox-item input[type="checkbox"]:checked {
+      background: var(--gold);
+      border-color: var(--gold);
+    }
+
+    .checkbox-item input[type="checkbox"]:checked::after {
+      content: '';
+      position: absolute;
+      left: 4px;
+      top: 1px;
+      width: 5px;
+      height: 9px;
+      border: 2px solid white;
+      border-top: none;
+      border-left: none;
+      transform: rotate(45deg);
+    }
+
+    .checkbox-text {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 13px;
+      font-weight: 300;
+      color: var(--ink);
+      line-height: 1.7;
+    }
+
+    .checkbox-text strong {
+      font-weight: 600;
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    /* ── SUBMIT ── */
+    .submit-area {
+      margin-top: 48px;
+      text-align: center;
+    }
+
+    .submit-btn {
+      display: inline-block;
+      padding: 16px 64px;
+      background: #3d3532;
+      color: #f0ece4;
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 16px;
+      letter-spacing: 0.25em;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .submit-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--gold);
+      transform: translateX(-100%);
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .submit-btn:hover::before { transform: translateX(0); }
+    .submit-btn span { position: relative; z-index: 1; }
+
+    .submit-note {
+      margin-top: 16px;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      color: var(--dust);
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    /* ── SUCCESS ── */
+    .success-screen {
+      display: none;
+      text-align: center;
+      padding: 80px 24px;
+      animation: fadeUp 0.6s ease forwards;
+    }
+
+    .success-screen.show { display: block; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .success-icon {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 48px;
+      color: var(--gold);
+      margin-bottom: 24px;
+    }
+
+    .success-title {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 28px;
+      color: var(--ink);
+      margin-bottom: 12px;
+      letter-spacing: 0.1em;
+    }
+
+    .success-desc {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 14px;
+      font-weight: 300;
+      color: var(--dust);
+      line-height: 2;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative;
+      z-index: 1;
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 24px;
+      border-top: 1px solid var(--line);
+      text-align: center;
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      color: var(--dust);
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    /* ── ERROR ── */
+    .field-error {
+      font-size: 11px;
+      color: var(--red);
+      margin-top: 6px;
+      letter-spacing: 0.05em;
+      font-family: 'DM Sans', sans-serif;
+      display: none;
+    }
+
+    .field-error.show { display: block; }
+
+    input.error, select.error { border-bottom-color: var(--red); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .field-group, .session-group, .checkbox-wrap, .submit-area {
+      animation: fadeIn 0.5s ease backwards;
+    }
+
+    .field-group:nth-child(1) { animation-delay: 0.05s; }
+    .field-group:nth-child(2) { animation-delay: 0.10s; }
+    .field-group:nth-child(3) { animation-delay: 0.15s; }
+    .field-group:nth-child(4) { animation-delay: 0.20s; }
+    .field-group:nth-child(5) { animation-delay: 0.25s; }
+
+    /* ── PAYMENT BOX ── */
+    .payment-box {
+      margin-top: 32px;
+      padding: 24px;
+      border: 1px solid var(--gold);
+      background: rgba(184,146,74,0.04);
+    }
+
+    .payment-title {
+      font-size: 10px;
+      letter-spacing: 0.25em;
+      color: var(--gold);
+      text-transform: uppercase;
+      font-family: 'DM Sans', sans-serif;
+      margin-bottom: 10px;
+    }
+
+    .payment-amount {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 32px;
+      color: var(--ink);
+      font-weight: 600;
+      margin-bottom: 16px;
+      letter-spacing: 0.05em;
+    }
+
+    .payment-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .payment-label {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      color: var(--dust);
+      font-family: 'DM Sans', sans-serif;
+      width: 56px;
+      flex-shrink: 0;
+    }
+
+    .payment-value {
+      font-family: 'Noto Sans KR', sans-serif;
+      font-size: 14px;
+      color: var(--ink);
+      flex: 1;
+    }
+
+    .copy-btn {
+      padding: 4px 12px;
+      background: transparent;
+      border: 1px solid var(--gold);
+      color: var(--gold);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      transition: all 0.2s;
+    }
+
+    .copy-btn:hover { background: var(--gold); color: var(--white); }
+    .copy-btn.copied { background: var(--gold); color: var(--white); }
+
+    .payment-note {
+      margin-top: 14px;
+      font-size: 11px;
+      color: var(--dust);
+      font-family: 'DM Sans', sans-serif;
+      letter-spacing: 0.05em;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 480px) {
+      .two-col { grid-template-columns: 1fr; gap: 0; }
+      .info-strip { grid-template-columns: 1fr; }
+      .info-item { border-right: none; border-bottom: 1px solid var(--line); }
+      .info-item:last-child { border-bottom: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="en-title">The <span>Holy</span> Nomad</div>
+    <div class="divider-line"></div>
+    <div class="ko-title">거룩한 유목민, 광야를 걷는 우리들에게</div>
+    <div class="ko-subtitle">2026 상반기 강연 by YKD 클래스D팀</div>
+    <div class="header-desc">교회 재건축을 앞두고 있습니다. 광야로 나가기 앞서,<br>우리에게 진짜 필요한 것이 무엇인지 함께 찾아가는 시간입니다.</div>
+    <div style="margin-top:20px;">
+      <a href="https://open.kakao.com/o/ss5d7ami" target="_blank" style="
+        display:inline-block;
+        padding: 8px 20px;
+        border: 1px solid var(--gold);
+        color: var(--gold);
+        font-family: 'Noto Sans KR', sans-serif;
+        font-size: 12px;
+        letter-spacing: 0.15em;
+        text-decoration: none;
+        transition: all 0.2s;
+      " onmouseover="this.style.background='var(--gold)';this.style.color='var(--white)'"
+         onmouseout="this.style.background='transparent';this.style.color='var(--gold)'">
+        💬 문의 · 카카오톡 오픈채팅
+      </a>
+    </div>
+  </header>
+
+  <!-- INFO STRIP -->
+  <div class="info-strip">
+    <div class="info-item">
+      <div class="info-label">1회차</div>
+      <div class="info-value">4월 19일 (주일)<br>오후 6:00</div>
+    </div>
+    <div class="info-item">
+      <div class="info-label">2회차</div>
+      <div class="info-value">4월 26일 (주일)<br>오후 6:00</div>
+    </div>
+    <div class="info-item">
+      <div class="info-label">장소</div>
+      <div class="info-value">교육관 4층<br>안디옥홀</div>
+    </div>
+  </div>
+
+  <!-- CAPACITY -->
+  <div class="capacity-wrap">
+    <span class="capacity-label">CAPACITY</span>
+    <div class="capacity-bar-bg">
+      <div class="capacity-bar-fill" id="capacityFill"></div>
+    </div>
+    <span class="capacity-count" id="capacityText">
+      <span id="filledCount">0</span> / 50
+    </span>
+  </div>
+
+  <!-- MAIN FORM -->
+  <main>
+    <div id="formSection">
+      <div class="form-section-title">신청 정보</div>
+
+      <div class="two-col">
+        <div class="field-group">
+          <label>이름 <span class="required">*</span></label>
+          <input type="text" id="name" placeholder="홍길동" />
+          <div class="field-error" id="nameError">이름을 입력해주세요.</div>
+        </div>
+        <div class="field-group">
+          <label>연락처 <span class="required">*</span></label>
+          <input type="tel" id="phone" placeholder="010-0000-0000" />
+          <div class="field-error" id="phoneError">연락처를 입력해주세요.</div>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div class="field-group">
+          <label>소속 마을 <span class="required">*</span></label>
+          <div class="select-wrap">
+            <select id="village">
+              <option value="" disabled selected>선택</option>
+              <option value="소금마을">소금마을</option>
+              <option value="빛마을">빛마을</option>
+              <option value="행복가족(새가족)">행복가족(새가족)</option>
+            </select>
+          </div>
+          <div class="field-error" id="villageError">소속 마을을 선택해주세요.</div>
+        </div>
+        <div class="field-group">
+          <label>소속 셀</label>
+          <input type="text" id="cell" placeholder="셀 이름 입력" />
+          <div class="field-error" id="cellError">소속 셀을 입력해주세요.</div>
+        </div>
+      </div>
+
+      <div class="checkbox-wrap">
+        <label class="checkbox-item">
+          <input type="checkbox" id="sessionConfirm" />
+          <span class="checkbox-text">
+            <strong>전체 참석 가능 여부 확인</strong>
+            1회차(4월 19일) · 2회차(4월 26일)<br>두 회차 모두 참석 가능함을 확인합니다.<br>선착순 마감이므로 불참 시 꼭 미리 알려주세요.
+          </span>
+        </label>
+        <div class="field-error" id="sessionError">전체 참석 가능 여부를 확인해주세요.</div>
+      </div>
+
+      <!-- 참가비 안내 -->
+      <div class="payment-box">
+        <div class="payment-title">참가비 안내</div>
+        <div class="payment-amount" id="paymentAmount">₩ 5,000</div>
+        <div id="paymentRows">
+          <div class="payment-row">
+            <span class="payment-label">입금 계좌</span>
+            <span class="payment-value" id="accountNum">카카오뱅크 7942-30-77692</span>
+            <button class="copy-btn" onclick="copyAccount()">복사</button>
+          </div>
+          <div class="payment-row">
+            <span class="payment-label">예금주</span>
+            <span class="payment-value">박정윤</span>
+          </div>
+        </div>
+        <div class="payment-note" id="paymentNoteText">4월 12일(주일)까지 미입금 시 신청이 취소될 수 있습니다</div>
+      </div>
+
+      <div class="submit-area">
+        <button class="submit-btn" onclick="handleSubmit()">
+          <span>신청하기</span>
+        </button>
+        <div class="submit-note" id="submitNote">선착순 50명 · 마감 시 대기 신청(최대 10명) 가능</div>
+      </div>
+    </div>
+
+    <!-- SUCCESS -->
+    <div class="success-screen" id="successScreen">
+      <div class="success-icon">✦</div>
+      <div class="success-title">신청이 완료되었습니다</div>
+      <div class="success-desc" id="successDesc">
+        광야를 함께 걸어갈 준비가 되셨군요.<br>
+        강연 당일 뵙겠습니다.<br><br>
+        문의사항은 클래스D팀으로 연락해주세요.
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    창동염광교회 YKD 클래스D팀<br>
+    <a href="https://open.kakao.com/o/ss5d7ami" target="_blank" style="color:var(--gold);text-decoration:none;letter-spacing:0.1em;">
+      💬 문의 · 카카오톡 오픈채팅
+    </a>
+  </footer>
+
+  <script>
+    const TOTAL = 50;
+    const WAITLIST_MAX = 10;
+    let filled = 0;
+
+    // 실시간 신청자 수 불러오기 (JSONP)
+    function onCount(data) {
+      if (data && typeof data.count === 'number') {
+        filled = data.count;
+        updateCapacity();
+      }
+    }
+    const countScript = document.createElement('script');
+    countScript.src = 'https://script.google.com/macros/s/AKfycbzkKIVhoRUJ4Po13KYLTeXqipcTQucjTHHoUHw_Bu7GDEelqyo-tlWRDC0qt3nzYz0U/exec?callback=onCount';
+    document.head.appendChild(countScript);
+
+    function updateCapacity() {
+      const isWaitlist = filled >= TOTAL;
+      const pct = Math.min((filled / TOTAL) * 100, 100);
+      document.getElementById('capacityFill').style.width = pct + '%';
+      document.getElementById('capacityFill').style.background = isWaitlist ? '#B8924A' : 'var(--gold)';
+      document.getElementById('filledCount').textContent = filled;
+
+      const note = document.getElementById('submitNote');
+      if (filled >= TOTAL + WAITLIST_MAX) {
+        note.textContent = '신청이 마감되었습니다';
+        note.style.color = 'var(--red)';
+      } else if (isWaitlist) {
+        const waitNum = filled - TOTAL + 1;
+        note.textContent = `본 신청은 대기 ${waitNum}번째로 등록됩니다 · 대기 최대 ${WAITLIST_MAX}명`;
+        note.style.color = 'var(--gold)';
+      } else {
+        note.textContent = `선착순 50명 · 마감 시 대기 신청(최대 ${WAITLIST_MAX}명) 가능`;
+        note.style.color = '';
+      }
+    }
+
+    // 행복가족(새가족) 선택 시 무료 표기
+    document.getElementById('village').addEventListener('change', function () {
+      const isFree = this.value === '행복가족(새가족)';
+      document.getElementById('paymentAmount').textContent = isFree ? '무료' : '₩ 5,000';
+      document.getElementById('paymentRows').style.display = isFree ? 'none' : 'block';
+      document.getElementById('paymentNoteText').textContent = isFree
+        ? '행복가족(새가족)은 참가비가 없습니다 🎉'
+        : '4월 12일(주일)까지 미입금 시 신청이 취소될 수 있습니다';
+    });
+
+    function copyAccount() {
+      const btn = document.querySelector('.copy-btn');
+      navigator.clipboard.writeText('카카오뱅크 7942-30-77692').then(() => {
+        btn.textContent = '복사됨 ✓';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = '복사'; btn.classList.remove('copied'); }, 2000);
+      });
+    }
+
+    setTimeout(updateCapacity, 300);
+
+    // 전화번호 자동 하이픈
+    document.getElementById('phone').addEventListener('input', function () {
+      let v = this.value.replace(/\D/g, '');
+      if (v.length <= 3) this.value = v;
+      else if (v.length <= 7) this.value = v.slice(0,3) + '-' + v.slice(3);
+      else this.value = v.slice(0,3) + '-' + v.slice(3,7) + '-' + v.slice(7,11);
+    });
+
+    function showError(id, show) {
+      const el = document.getElementById(id);
+      el.classList.toggle('show', show);
+    }
+
+    function setFieldError(inputId, errorId, hasError) {
+      const input = document.getElementById(inputId);
+      if (input) input.classList.toggle('error', hasError);
+      showError(errorId, hasError);
+    }
+
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzkKIVhoRUJ4Po13KYLTeXqipcTQucjTHHoUHw_Bu7GDEelqyo-tlWRDC0qt3nzYz0U/exec';
+
+    function handleSubmit() {
+      if (filled >= TOTAL + WAITLIST_MAX) {
+        alert('신청 인원 및 대기 인원이 모두 마감되었습니다.');
+        return;
+      }
+
+      const name = document.getElementById('name').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const village = document.getElementById('village').value;
+      const cell = document.getElementById('cell').value.trim();
+      const sessionConfirm = document.getElementById('sessionConfirm').checked;
+
+      setFieldError('name', 'nameError', !name);
+      setFieldError('phone', 'phoneError', !phone);
+      setFieldError('village', 'villageError', !village);
+      showError('sessionError', !sessionConfirm);
+
+      if (!name || !phone || !village || !sessionConfirm) return;
+
+      const isWaitlist = filled >= TOTAL;
+      const btn = document.querySelector('.submit-btn');
+      btn.disabled = true;
+      btn.querySelector('span').textContent = '제출 중...';
+
+      fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, phone, village, cell, sessionConfirm: '확인', isWaitlist })
+      }).then(() => {
+        filled++;
+        updateCapacity();
+
+        const successDesc = document.getElementById('successDesc');
+        const isFree = village === '행복가족(새가족)';
+        if (isWaitlist) {
+          const waitNum = filled - TOTAL;
+          successDesc.innerHTML = `대기 ${waitNum}번째로 등록되었습니다.<br>자리가 생기면 개별 연락드릴게요.<br><br>문의사항은 <a href="https://open.kakao.com/o/ss5d7ami" target="_blank" style="color:var(--gold);">카카오톡 오픈채팅</a>으로 연락해주세요.`;
+        } else if (isFree) {
+          successDesc.innerHTML = `광야를 함께 걸어갈 준비가 되셨군요.<br>강연 당일 뵙겠습니다.<br><br>
+          문의사항은 <a href="https://open.kakao.com/o/ss5d7ami" target="_blank" style="color:var(--gold);">카카오톡 오픈채팅</a>으로 연락해주세요.`;
+        } else {
+          successDesc.innerHTML = `광야를 함께 걸어갈 준비가 되셨군요.<br>강연 당일 뵙겠습니다.<br><br>
+          <span style="color:var(--gold);font-size:13px;letter-spacing:0.05em;">
+            참가비 5,000원을 4월 12일(주일)까지 입금해주세요<br>
+            카카오뱅크 7942-30-77692 (박정윤)
+          </span><br><br>
+          문의사항은 <a href="https://open.kakao.com/o/ss5d7ami" target="_blank" style="color:var(--gold);">카카오톡 오픈채팅</a>으로 연락해주세요.`;
+        }
+
+        document.getElementById('formSection').style.display = 'none';
+        document.getElementById('successScreen').classList.add('show');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }).catch(() => {
+        btn.disabled = false;
+        btn.querySelector('span').textContent = '신청하기';
+        alert('오류가 발생했습니다. 잠시 후 다시 시도해주세요.');
+      });
+    }
+  </script>
+</body>
+</html>
